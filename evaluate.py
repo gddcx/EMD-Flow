@@ -1,44 +1,33 @@
 import sys
 sys.path.append('core')
 
-from PIL import Image
 import argparse
 import os
-import time
 import numpy as np
 import torch
-import torch.nn.functional as F
-import matplotlib.pyplot as plt
 
 import datasets
-from utils import flow_viz
 from utils import frame_utils
 
-from trans_raft import TransRAFT
+from emd import EMD
 from utils.utils import InputPadder, forward_interpolate
 
 
 @torch.no_grad()
-def create_sintel_submission(model, iters=32, warm_start=False, output_path='sintel_submission'):
+def create_sintel_submission(model, output_path='sintel_submission'):
     """ Create submission for the Sintel leaderboard """
     model.eval()
     for dstype in ['clean', 'final']:
         test_dataset = datasets.MpiSintel(split='test', aug_params=None, dstype=dstype)
-        
-        flow_prev, sequence_prev = None, None
+
         for test_id in range(len(test_dataset)):
             image1, image2, (sequence, frame) = test_dataset[test_id]
-            if sequence != sequence_prev:
-                flow_prev = None
              
             padder = InputPadder(image1.shape)
             image1, image2 = padder.pad(image1[None].cuda(), image2[None].cuda())
             
-            flow_pr = model(image1, image2, flow_init=flow_prev, test_mode=True)
+            flow_pr = model(image1, image2, test_mode=True)
             flow = padder.unpad(flow_pr[0]).permute(1, 2, 0).cpu().numpy()
-
-            # if warm_start:
-            #     flow_prev = forward_interpolate(flow_low[0])[None].cuda()
             
             output_dir = os.path.join(output_path, dstype, sequence)
             output_file = os.path.join(output_dir, 'frame%04d.flo' % (frame+1))
@@ -47,11 +36,10 @@ def create_sintel_submission(model, iters=32, warm_start=False, output_path='sin
                 os.makedirs(output_dir)
 
             frame_utils.writeFlow(output_file, flow)
-            sequence_prev = sequence
 
 
 @torch.no_grad()
-def create_kitti_submission(model, iters=24, output_path='kitti_submission'):
+def create_kitti_submission(model, output_path='kitti_submission'):
     """ Create submission for the Sintel leaderboard """
     model.eval()
     test_dataset = datasets.KITTI(split='testing', aug_params=None)
@@ -72,7 +60,7 @@ def create_kitti_submission(model, iters=24, output_path='kitti_submission'):
 
 
 @torch.no_grad()
-def validate_chairs(model, iters=24):
+def validate_chairs(model):
     """ Perform evaluation on the FlyingChairs (test) split """
     model.eval()
     epe_list = []
@@ -164,9 +152,6 @@ def validate_kitti(model):
     return {'kitti-epe': epe, 'kitti-f1': f1}
 
 
-def count_parameters(model):
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help="restore checkpoint")
@@ -177,19 +162,18 @@ if __name__ == '__main__':
 
     parser.add_argument('--iters8', type=int, default=6)
     parser.add_argument('--iters4', type=int, default=6)
+
+    parser.add_argument('--model_type', type=str, default='L')
     args = parser.parse_args()
 
-    model = torch.nn.DataParallel(TransRAFT(args))
-    model.load_state_dict(torch.load(args.model), strict=False)
+    assert args.iters8 > 0 and args.iters4 >= 0
+    assert args.model_type == 'S' or args.model_type == 'M' or args.model_type == 'L'
 
-    print("Parameter Count: %d" % count_parameters(model))
+    model = torch.nn.DataParallel(EMD(args))
+    model.load_state_dict(torch.load(args.model))
 
     model.cuda()
     model.eval()
-
-    # create_sintel_submission(model.module)
-    # create_kitti_submission(model.module)
-    #exit()
 
     with torch.no_grad():
         if args.dataset == 'chairs':
