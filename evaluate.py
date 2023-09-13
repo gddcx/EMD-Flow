@@ -163,7 +163,7 @@ if __name__ == '__main__':
     parser.add_argument('--iters8', type=int, default=6)
     parser.add_argument('--iters4', type=int, default=0)
 
-    parser.add_argument('--model_type', type=str, default='L')
+    parser.add_argument('--model_type', type=str, default='S')
     args = parser.parse_args()
 
     assert args.iters8 > 0 and args.iters4 >= 0
