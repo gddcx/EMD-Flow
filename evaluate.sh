@@ -7,6 +7,6 @@ python evaluate.py --model weights/EMD_things_S.pth --dataset kitti --iters8 18 
 python evaluate.py --model weights/EMD_things_M.pth --dataset sintel --iters8 18 --iters4 6 --model_type M
 python evaluate.py --model weights/EMD_things_M.pth --dataset kitti --iters8 18 --iters4 6 --model_type M
 
-# For EMD-M
+# For EMD-L
 python evaluate.py --model weights/EMD_things_L.pth --dataset sintel --iters8 18 --iters4 6 --model_type L
 python evaluate.py --model weights/EMD_things_L.pth --dataset kitti --iters8 18 --iters4 6 --model_type L
