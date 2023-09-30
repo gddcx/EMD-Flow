@@ -6,7 +6,7 @@ Changxing Deng<sup>1</sup>, Ao Luo<sup>2</sup>, Haibin Huang<sup>3</sup>, Shaoda
 <p align="center">1. University of Macau, 2. Megvii Technology, 3. Kuaishou Technology, </p>
 <p align="center">4. University of Electronic Science and Technology of China</p>
 
-This repository provides the implementation for [Explicit Motion Disentangling for Efficient Optical Flow Estimation]()
+This repository provides the implementation for [Explicit Motion Disentangling for Efficient Optical Flow Estimation](https://openaccess.thecvf.com/content/ICCV2023/papers/Deng_Explicit_Motion_Disentangling_for_Efficient_Optical_Flow_Estimation_ICCV_2023_paper.pdf)
 
 # Abstract
 
@@ -14,7 +14,14 @@ In this paper, we propose a novel framework for optical flow estimation that ach
 Towards this end, we introduce EMD-Flow, a framework that explicitly separates global motion estimation from the recurrent refinement stage. We propose two novel modules: Multi-scale Motion Aggregation (MMA) and Confidence-induced Flow Propagation (CFP). These modules leverage cross-scale matching prior and self-contained confidence maps to handle the ambiguities of dense matching in a global manner, generating a dense initial flow. Additionally, a lightweight decoding module is followed to handle small displacements, resulting in an efficient yet robust flow estimation framework. 
 We further conduct comprehensive experiments on standard optical flow benchmarks with the proposed framework, and the experimental results demonstrate its superior balance between performance and runtime.
 
+
+## Comparison with state-of-the-art methods on Sintel and KITTI datasets.
+
+![comparison](https://github.com/gddcx/EMD-Flow/assets/47421121/4357a153-b2af-4330-bffe-0ff938322e3f)
+
+
 # Requirements
+
 pytorch==1.10.2 \
 torchvision==0.11.3 \
 numpy==1.19.2 \
@@ -31,6 +38,8 @@ cudatoolkit==11.3.1
 3. Evaluate our models by ` sh evaluate.sh `
 
 # Citation
+
+
 
 # Acknowledgement
 The main framework is adapted from [RAFT](https://github.com/princeton-vl/RAFT), [Swin-Transformer](https://github.com/microsoft/Swin-Transformer) and [FlowFormer](https://github.com/drinkingcoder/FlowFormer-Official). We thank the authors for the contribution.
