@@ -17,7 +17,7 @@ We further conduct comprehensive experiments on standard optical flow benchmarks
 
 ## Comparison with state-of-the-art methods on Sintel and KITTI datasets.
 
-![comparison](https://github.com/gddcx/EMD-Flow/assets/47421121/4357a153-b2af-4330-bffe-0ff938322e3f)
+![comparison](https://github.com/gddcx/EMD-Flow/assets/47421121/8668f21c-2457-4d00-aa47-faf1c3d1ab47)
 
 
 # Requirements
@@ -39,7 +39,16 @@ cudatoolkit==11.3.1
 
 # Citation
 
-
+If you think this work is helpful, please cite
+```
+@inproceedings{deng2023explicit,
+  title={Explicit motion disentangling for efficient optical flow estimation},
+  author={Deng, Changxing and Luo, Ao and Huang, Haibin and Ma, Shaodan and Liu, Jiangyu and Liu, Shuaicheng},
+  booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
+  pages={9521--9530},
+  year={2023}
+}
+```
 
 # Acknowledgement
 The main framework is adapted from [RAFT](https://github.com/princeton-vl/RAFT), [Swin-Transformer](https://github.com/microsoft/Swin-Transformer) and [FlowFormer](https://github.com/drinkingcoder/FlowFormer-Official). We thank the authors for the contribution.
